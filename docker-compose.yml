@@ -1,0 +1,9 @@
+services:
+  nuxt-app:
+    build: .
+    container_name: nuxt-web
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_PUBLIC_API_BASE: "http://drupal:80/jsonapi"
+    restart: always
