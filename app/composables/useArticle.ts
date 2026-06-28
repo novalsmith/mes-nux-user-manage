@@ -5,10 +5,22 @@ export const useArticle = async () => {
   const service = useArticleService();
   
   // Mengambil kedua data sekaligus secara paralel
-  const [articles, recipes] = await Promise.all([
+  const [articles] = await Promise.all([
     service.getArticles("article"),
+    // service.getArticles("recipe")
+  ]);
+  
+  return { articles };
+};
+
+export const useRecipes = async () => {
+  const service = useArticleService();
+  
+  // Mengambil kedua data sekaligus secara paralel
+  const [recipes] = await Promise.all([
+    // service.getArticles("article"),
     service.getArticles("recipe")
   ]);
   
-  return { articles, recipes };
+  return { recipes };
 };
