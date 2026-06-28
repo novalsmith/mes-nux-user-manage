@@ -1,13 +1,30 @@
-<!-- layouts/default.vue -->
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
+const items = ref<NavigationMenuItem[]>([
+{
+    label: 'Home',
+    icon: 'i-lucide-home',
+    to: '/',
+  },  
+{
+    label: 'Articles',
+    icon: 'i-lucide-book-open',
+    to: '/articles',
+  }, 
+  {
+    label: 'Recipes',
+    icon: 'i-simple-icons-github',
+    badge: '3.8k',
+    to: '/recipes'
+  }
+])
+</script>
+
 <template>
-  <div>
-    <nav style="padding: 20px; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
-      <NuxtLink to="/" style="margin-right: 15px;">Home</NuxtLink>
-      <NuxtLink to="/articles" style="margin-right: 15px;">Articles</NuxtLink>
-      <NuxtLink to="/recipes">Recipes</NuxtLink>
-    </nav>
-    <main>
-      <slot />  
-    </main>
+    <div>
+      <UNavigationMenu :items="items" class="w-full justify-center" />
+    <slot />
   </div>
+  
 </template>
