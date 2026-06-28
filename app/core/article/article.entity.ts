@@ -3,5 +3,6 @@ export interface Article {
   id: string;
   title: string;
   content: string;
-  image?: string;
+  image?: string | null;
+  path: string;
 }

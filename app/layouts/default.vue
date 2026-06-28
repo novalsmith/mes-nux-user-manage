@@ -7,7 +7,7 @@
       <NuxtLink to="/recipes">Recipes</NuxtLink>
     </nav>
     <main>
-      <slot /> <!-- Konten halaman akan masuk di sini -->
+      <slot />  
     </main>
   </div>
 </template>

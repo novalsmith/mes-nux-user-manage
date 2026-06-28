@@ -1,11 +1,19 @@
-// app/services/article.service.ts
-import { useArticleApi } from "~/infrastructure/api/article.api";
+// services/article.service.ts
+import { useArticleApi } from "@/infrastructure/api/article.api";
 
 export const useArticleService = () => {
-  const repo = useArticleApi(); 
+  const api = useArticleApi();
 
   return {
-    // Tambahkan tipe parameter di sini juga
-    getArticles: (type: 'article' | 'recipe' = 'article') => repo.findAll(type)
+    getArticles: async (type: string) => {
+      // Logika service untuk list
+      return await api.findAll();
+    },
+    // Tambahkan implementasi di sini:
+    getArticleById: async (id: string) => {
+      // Memanggil API layer
+      // Gunakan proxy yang sudah kita bahas sebelumnya
+      return await $fetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image`);
+    }
   };
 };
