@@ -59,11 +59,14 @@ const items = computed<NavigationMenuItem[]>(() => [
   <UHeader>
     <template #title>
       <Logo class="h-6 w-auto" />
+    
     </template>
 
     <UNavigationMenu :items="items" />
+    
 
     <template #right>
+<SearchBox />
       <UColorModeButton />
 
       <UTooltip text="Open on GitHub" :kbds="['meta', 'G']">
