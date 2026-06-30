@@ -10,15 +10,17 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/ui": "latest",
+    "@nuxt/ui": "^4.9.0",
     "@pinia/nuxt": "latest",
     "nuxt": "latest",
     "pinia": "latest",
+    "tailwindcss": "^4.3.2",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.114",
+    "@iconify-json/simple-icons": "^1.2.88",
     "@types/node": "latest"
   }
 }

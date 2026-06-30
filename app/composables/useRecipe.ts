@@ -1,23 +1,24 @@
-// app/composables/useArticle.ts
-import { useArticleService } from "~~/services/article.service";
+// app/composables/useRecipe.ts
+import { useRecipeService } from "~~/services/recipe.service";
 
-export const useArticle = async () => {
-  const service = useArticleService();
+export const useRecipes = async () => {
+  const service = useRecipeService();
   
-  const [articles] = await Promise.all([
-    service.getArticles("article"),
+  const [recipes] = await Promise.all([
+    service.getRecipes()
   ]);
   
-  return { articles };
+  return { recipes };
 }; 
 
-export const useArticleDetail = (id: string) => {
-  const config = useRuntimeConfig();
-  const service = useArticleService();
 
-  const { data, pending, error } = useAsyncData(`article-${id}`, async () => {
-    const raw: any = await service.getArticleById(id);
-    
+export const useRecipeDetail = (id: string) => {
+  const config = useRuntimeConfig();
+  const service = useRecipeService();
+
+  const { data, pending, error } = useAsyncData(`recipe-${id}`, async () => {
+    const raw: any = await service.getRecipeById(id);
+
     // Logika transformasi (dipindahkan dari komponen ke sini)
     const item = raw.data;
     const mediaId = item.relationships?.field_media_image?.data?.id;
@@ -37,5 +38,5 @@ export const useArticleDetail = (id: string) => {
     };
   });
 
-  return { article: data, pending, error };
+  return { recipe: data, pending, error };
 };
