@@ -78,18 +78,7 @@ const items = computed<NavigationMenuItem[]>(() => [
       </UTooltip>
     </template>
   </UHeader>
-    <UCard>
-        <!-- Slot default (untuk body) -->
-        <p>Ini adalah konten utama di dalam body card.</p>
-
-        <!-- Slot header -->
-        <template #header>
-          <h3>Judul Card</h3>
-        </template>
-
-        <!-- Slot footer -->
-        <template #footer>
-          <p>Ini adalah bagian footer.</p>
-        </template>
-      </UCard>
+     <UContainer class="py-8">
+      <slot />
+    </UContainer>
 </template>
