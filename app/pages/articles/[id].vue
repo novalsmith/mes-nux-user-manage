@@ -1,10 +1,34 @@
 <template>
-  <div v-if="pending">Memuat artikel...</div>
-  <div v-else-if="article">
-    <NuxtLink to="/articles">Kembali ke Daftar</NuxtLink>
-    <h1>{{ article.title }}</h1>
-    <img v-if="article.image" :src="article.image" style="max-width: 500px" />
-    <div v-html="article.body"></div>
+  <div class="py-12 px-4">
+    <!-- State Loading -->
+    <div v-if="pending" class="flex justify-center items-center h-64">
+      <UIcon name="i-lucide-loader-2" class="animate-spin w-8 h-8 text-primary" />
+    </div>
+
+    <!-- Konten Artikel -->
+    <article v-else-if="article" class="max-w-3xl mx-auto">
+      <!-- Header Artikel -->
+      <header class="mb-8">
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
+          {{ article.title }}
+        </h1>
+      </header>
+
+      <!-- Gambar Utama -->
+      <div v-if="article.image" class="mb-10 overflow-hidden rounded-3xl shadow-lg">
+        <img 
+          :src="article.image" 
+          :alt="article.title" 
+          class="w-full h-auto object-cover" 
+        />
+      </div>
+
+      <!-- Isi Artikel (Body) -->
+      <div 
+        class="prose prose-lg dark:prose-invert prose-primary max-w-none" 
+        v-html="article.body"
+      ></div>
+    </article>
   </div>
 </template>
 
