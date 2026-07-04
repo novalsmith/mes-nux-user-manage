@@ -5,4 +5,10 @@ export interface Article {
   content: string;
   image?: string | null;
   path: string;
+  tags: Tag[]
+}
+
+export interface Tag {
+  id: string;
+  name: string;
 }

@@ -13,7 +13,14 @@ export const useArticleService = () => {
     getArticleById: async (id: string) => {
       // Memanggil API layer
       // Gunakan proxy yang sudah kita bahas sebelumnya
-      return await $fetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image`);
+      return await $fetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image,field_tags`);
+    },
+     getTagById: async (id: string) => {
+      // Memanggil API layer
+      // Gunakan proxy yang sudah kita bahas sebelumnya
+      return await $fetch(`/api/drupal/node/article?filter[field_tags.id]=${id}&include=field_media_image,field_media_image.field_media_image,field_tags`);
     }
   };
 };
+
+ 

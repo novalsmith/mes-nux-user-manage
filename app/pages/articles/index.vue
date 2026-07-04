@@ -1,18 +1,23 @@
+<!-- app/pages/articles/index.vue -->
 <template>
-  <div>
-    <h1>Articles</h1>
-    <ul>
-      <li v-for="a in articles" :key="a.id">
-        <NuxtLink :to="`/articles/${a.id}`">
-          <img v-if="a.image" :src="a.image" width="100" />
-          <h2>{{ a.title }}</h2>
-        </NuxtLink>
-      </li>
-    </ul>
+  <div class="p-6">
+    <h1 class="text-3xl font-bold mb-8">Articles</h1>
+    
+    <!-- Grid container dengan gap yang cukup untuk ruang napas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <ArticleCard 
+        v-for="a in articles" 
+        :key="a.id"
+        :image="a.image"
+        :title="a.title"
+        :link="`/articles/${a.id}`"
+        :tags="a.tags"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Pastikan fungsi useArticle mengembalikan data yang sudah dimap
+// Pastikan data artikel tersedia
 const { articles } = await useArticle(); 
 </script>
