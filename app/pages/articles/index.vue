@@ -11,6 +11,7 @@
         :image="a.image"
         :title="a.title"
         :link="`/articles/${a.id}`"
+        :tags="a.tags"
       />
     </div>
   </div>

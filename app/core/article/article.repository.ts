@@ -10,4 +10,7 @@ export interface ArticleRepository {
   findAll(): Promise<Article[]>;
   // Tambahkan baris ini:
   findById(id: string): Promise<any>; 
+  findByTag(tagId: string): Promise<Article[]>;
+
 }
+ 

@@ -6,3 +6,4 @@ export interface RecipeRepository {
   // Tambahkan baris ini:
   findById(id: string): Promise<any>; 
 }
+

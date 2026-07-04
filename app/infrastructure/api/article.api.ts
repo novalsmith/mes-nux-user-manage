@@ -9,7 +9,7 @@ export const useArticleApi = (): ArticleRepository => {
           async findAll(type: 'article' | 'recipe' = 'article'): Promise<Article[]> {
             // Bangun URL secara manual untuk menghindari masalah encoding query
             const baseUrl = `/api/drupal/node/${type}`;
-            const includeParams = 'include=field_media_image,field_media_image.field_media_image';
+            const includeParams = 'include=field_media_image,field_media_image.field_media_image,field_tags';
             const url = `${baseUrl}?${includeParams}`;
             
           const { data, error } = await useFetch(url);
@@ -33,17 +33,23 @@ export const useArticleApi = (): ArticleRepository => {
                 ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
                 : null;
 
+                const tags = item.relationships?.field_tags?.data?.map((tagRef: any) => {
+                    const tagItem = raw.included?.find((inc: any) => inc.id === tagRef.id);
+                    return { id: tagRef.id, name: tagItem?.attributes?.name };
+                }) || [];
+
             return {
                 id: item.id,
                 title: item.attributes.title,
                 image: imageUrl,
+                tags: tags,
                 path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`
               };
           });
         },
 
         async findById(id: string): Promise<Article> {
-      const { data, error } = await useFetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image`);
+      const { data, error } = await useFetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image,field_tags`);
       
       if (error.value || !data.value) {
         throw new Error(`Gagal mengambil detail artikel: ${id}`);
@@ -68,8 +74,54 @@ export const useArticleApi = (): ArticleRepository => {
         title: item.attributes.title,
         content: item.attributes.body?.value || '', // Sesuaikan field content
         image: imageUrl,
-        path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`
+        path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`,
+        tags: item.relationships?.field_tags?.data?.map((tagRef: any) => {
+          const tagItem = raw.included?.find((inc: any) => inc.id === tagRef.id);
+          return { id: tagRef.id, name: tagItem?.attributes?.name };
+        }) || []
       };
-    }
+    },
+ 
+
+      async findByTag(tagId: string): Promise<Article[]> {
+            // Bangun URL secara manual untuk menghindari masalah encoding query
+            const url = `/api/drupal/node/article?filter[field_tags.id]=${tagId}&include=field_media_image,field_media_image.field_media_image,field_tags`;
+            
+          const { data, error } = await useFetch(url);
+            
+          if (error.value) {
+              console.error("Error dari Proxy/Drupal:", error.value);
+              return [];
+            }
+
+            const raw = data.value as any;
+            if (!raw?.data) return [];
+
+                return raw.data.map((item: any) => {
+
+            const mediaId = item.relationships?.field_media_image?.data?.id;  
+            const mediaItem = raw.included?.find((inc: any) => inc.id === mediaId);  
+            const fileId = mediaItem?.relationships?.field_media_image?.data?.id;  
+            const fileItem = raw.included?.find((inc: any) => inc.id === fileId);  
+            const drupalBaseUrl = 'http://localhost:8080';
+              const imageUrl = fileItem?.attributes?.uri?.url 
+                ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
+                : null;
+
+                const tags = item.relationships?.field_tags?.data?.map((tagRef: any) => {
+                    const tagItem = raw.included?.find((inc: any) => inc.id === tagRef.id);
+                    return { id: tagRef.id, name: tagItem?.attributes?.name };
+                }) || [];
+
+            return {
+                id: item.id,
+                title: item.attributes.title,
+                image: imageUrl,
+                tags: tags,
+                path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`
+              };
+          });
+        },
+
   };
 };

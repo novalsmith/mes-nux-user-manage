@@ -33,7 +33,7 @@ export const useRecipeDetail = (id: string) => {
 
     return {
       title: item.attributes.title,
-      body: item.attributes.field_body?.processed,
+      body: item.attributes.field_recipe_instruction?.processed,
       image: imageUrl,
     };
   });

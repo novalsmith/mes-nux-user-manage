@@ -5,6 +5,8 @@
       <UIcon name="i-lucide-loader-2" class="animate-spin w-8 h-8 text-primary" />
     </div>
 
+       
+
     <!-- Konten Artikel -->
     <article v-else-if="article" class="max-w-3xl mx-auto">
       <!-- Header Artikel -->
@@ -13,6 +15,22 @@
           {{ article.title }}
         </h1>
       </header>
+
+        <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Tags:</h2>
+        <div class="flex flex-wrap gap-2">
+        <NuxtLink 
+          v-for="tag in article.tags" 
+          :key="tag.id" 
+          :to="`/tags/${tag.id}`"
+          class="inline-block"
+        >
+          <UBadge variant="subtle">
+            {{ tag.name }}
+          </UBadge>
+        </NuxtLink>
+        </div>
+      </div>   
 
       <!-- Gambar Utama -->
       <div v-if="article.image" class="mb-10 overflow-hidden rounded-3xl shadow-lg">
