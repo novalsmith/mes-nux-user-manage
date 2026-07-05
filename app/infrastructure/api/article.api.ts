@@ -1,14 +1,15 @@
 // infrastructure/api/article.api.ts
-import type { ArticleRepository } from '@/core/article/article.repository';
-import type { Article } from '@/core/article/article.entity';
+import type { ArticleRepository } from '~/repository/article.repository';
+import type { Article } from '@/model/article.entity';
 
 export const useArticleApi = (): ArticleRepository => {
   const config = useRuntimeConfig();
+  const drupalBaseUrl = config.public.drupalBaseUrl;
   
   return {
           async findAll(type: 'article' | 'recipe' = 'article'): Promise<Article[]> {
             // Bangun URL secara manual untuk menghindari masalah encoding query
-            const baseUrl = `/api/drupal/node/${type}`;
+            const baseUrl = `${drupalBaseUrl}/${type}`;
             const includeParams = 'include=field_media_image,field_media_image.field_media_image,field_tags';
             const url = `${baseUrl}?${includeParams}`;
             
@@ -28,7 +29,7 @@ export const useArticleApi = (): ArticleRepository => {
             const mediaItem = raw.included?.find((inc: any) => inc.id === mediaId);  
             const fileId = mediaItem?.relationships?.field_media_image?.data?.id;  
             const fileItem = raw.included?.find((inc: any) => inc.id === fileId);  
-            const drupalBaseUrl = 'http://localhost:8080';
+   
               const imageUrl = fileItem?.attributes?.uri?.url 
                 ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
                 : null;
@@ -49,7 +50,7 @@ export const useArticleApi = (): ArticleRepository => {
         },
 
         async findById(id: string): Promise<Article> {
-      const { data, error } = await useFetch(`/api/drupal/node/article/${id}?include=field_media_image,field_media_image.field_media_image,field_tags`);
+      const { data, error } = await useFetch(`${drupalBaseUrl}/article/${id}?include=field_media_image,field_media_image.field_media_image,field_tags`);
       
       if (error.value || !data.value) {
         throw new Error(`Gagal mengambil detail artikel: ${id}`);
@@ -64,7 +65,6 @@ export const useArticleApi = (): ArticleRepository => {
       const fileId = mediaItem?.relationships?.field_media_image?.data?.id;
       const fileItem = raw.included?.find((inc: any) => inc.id === fileId);
       
-      const drupalBaseUrl = 'http://localhost:8080';
       const imageUrl = fileItem?.attributes?.uri?.url 
         ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
         : null;
@@ -85,7 +85,7 @@ export const useArticleApi = (): ArticleRepository => {
 
       async findByTag(tagId: string): Promise<Article[]> {
             // Bangun URL secara manual untuk menghindari masalah encoding query
-            const url = `/api/drupal/node/article?filter[field_tags.id]=${tagId}&include=field_media_image,field_media_image.field_media_image,field_tags`;
+            const url = `${drupalBaseUrl}/article?filter[field_tags.id]=${tagId}&include=field_media_image,field_media_image.field_media_image,field_tags`;
             
           const { data, error } = await useFetch(url);
             
@@ -103,7 +103,6 @@ export const useArticleApi = (): ArticleRepository => {
             const mediaItem = raw.included?.find((inc: any) => inc.id === mediaId);  
             const fileId = mediaItem?.relationships?.field_media_image?.data?.id;  
             const fileItem = raw.included?.find((inc: any) => inc.id === fileId);  
-            const drupalBaseUrl = 'http://localhost:8080';
               const imageUrl = fileItem?.attributes?.uri?.url 
                 ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
                 : null;

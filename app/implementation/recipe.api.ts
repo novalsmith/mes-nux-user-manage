@@ -1,8 +1,8 @@
 // infrastructure/api/recipe.api.ts
-import type { RecipeRepository } from '~/repository/recipe.repository';
+import type { RecipeInterface } from '~/interface/recipe.interface';
 import type { Recipe } from '~/model/recipe.entity';
 
-export const useRecipeApi = (): RecipeRepository => {
+export const useRecipeApi = (): RecipeInterface => {
   const config = useRuntimeConfig();
   const drupalBaseUrl = config.public.drupalBaseUrl;
   return {

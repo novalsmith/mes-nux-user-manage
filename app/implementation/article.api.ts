@@ -1,8 +1,8 @@
 // infrastructure/api/article.api.ts
-import type { ArticleRepository } from '~/repository/article.repository';
+import type { ArticleInterface } from '~/interface/article.interface';
 import type { Article } from '~/model/article.entity';
 
-export const useArticleApi = (): ArticleRepository => {
+export const useArticleApi = (): ArticleInterface => {
   const config = useRuntimeConfig();
     const drupalBaseUrl = config.public.drupalBaseUrl;
 
