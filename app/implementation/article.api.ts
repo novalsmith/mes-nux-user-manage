@@ -1,11 +1,11 @@
 // infrastructure/api/article.api.ts
-import type { ArticleRepository } from '~/repository/article.repository';
-import type { Article } from '@/model/article.entity';
+import type { ArticleInterface } from '~/interface/article.interface';
+import type { Article } from '~/model/article.entity';
 
-export const useArticleApi = (): ArticleRepository => {
+export const useArticleApi = (): ArticleInterface => {
   const config = useRuntimeConfig();
-  const drupalBaseUrl = config.public.drupalBaseUrl;
-  
+    const drupalBaseUrl = config.public.drupalBaseUrl;
+
   return {
           async findAll(type: 'article' | 'recipe' = 'article'): Promise<Article[]> {
             // Bangun URL secara manual untuk menghindari masalah encoding query
@@ -29,7 +29,6 @@ export const useArticleApi = (): ArticleRepository => {
             const mediaItem = raw.included?.find((inc: any) => inc.id === mediaId);  
             const fileId = mediaItem?.relationships?.field_media_image?.data?.id;  
             const fileItem = raw.included?.find((inc: any) => inc.id === fileId);  
-   
               const imageUrl = fileItem?.attributes?.uri?.url 
                 ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
                 : null;

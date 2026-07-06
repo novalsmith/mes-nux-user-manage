@@ -1,12 +1,10 @@
-// infrastructure/api/article.api.ts
-import type { RecipeRepository } from '~/repository/recipe.repository';
-import type { Recipe } from '@/model/recipe.entity';
+// infrastructure/api/recipe.api.ts
+import type { RecipeInterface } from '~/interface/recipe.interface';
+import type { Recipe } from '~/model/recipe.entity';
 
-export const useRecipeApi = (): RecipeRepository => {
+export const useRecipeApi = (): RecipeInterface => {
   const config = useRuntimeConfig();
-    const drupalBaseUrl = config.public.drupalBaseUrl;
-
-  
+  const drupalBaseUrl = config.public.drupalBaseUrl;
   return {
           async findAll(): Promise<Recipe[]> {
             // Bangun URL secara manual untuk menghindari masalah encoding query
@@ -59,7 +57,7 @@ export const useRecipeApi = (): RecipeRepository => {
       const fileId = mediaItem?.relationships?.field_media_image?.data?.id;
       const fileItem = raw.included?.find((inc: any) => inc.id === fileId);
       
-      const imageUrl = fileItem?.attributes?.uri?.url 
+       const imageUrl = fileItem?.attributes?.uri?.url 
         ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
         : null;
 

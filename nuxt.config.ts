@@ -12,4 +12,10 @@ export default defineNuxtConfig({
       include: ['@vue/devtools-core', '@vue/devtools-kit']
     }
   },
+  runtimeConfig: {
+    public: {
+      drupalBaseUrl: process.env.DRUPAL_BASE_URL || 'http://localhost:8080',
+      baseUrl: process.env.BASE_URL || 'http://localhost:3032',
+    }
+  }
 })

@@ -1,6 +1,9 @@
 // app/composables/useArticle.ts
 import { useArticleService } from "~~/services/article.service";
 
+const config = useRuntimeConfig();
+const drupalBaseUrl = config.public.drupalBaseUrl;
+
 export const useArticle = async () => {
   const service = useArticleService();
   
@@ -12,7 +15,7 @@ export const useArticle = async () => {
 }; 
 
 export const useArticleDetail = (id: string) => {
-  const config = useRuntimeConfig();
+  
   const service = useArticleService();
 
   const { data, pending, error } = useAsyncData(`article-${id}`, async () => {
@@ -25,8 +28,7 @@ export const useArticleDetail = (id: string) => {
     const fileId = mediaItem?.relationships?.field_media_image?.data?.id;
     const fileItem = raw.included?.find((inc: any) => inc.id === fileId);
     
-    const drupalBaseUrl = 'http://localhost:8080';
-      const imageUrl = fileItem?.attributes?.uri?.url 
+    const imageUrl = fileItem?.attributes?.uri?.url 
         ? `${drupalBaseUrl}${fileItem.attributes.uri.url}` 
         : null;
 
@@ -54,8 +56,6 @@ export const getArticlesByTag = (id: string) => {
     
     // Pastikan raw.data ada dan berbentuk array
     if (!raw || !raw.data) return [];
-
-    const drupalBaseUrl = 'http://localhost:8080';
 
     // Lakukan mapping karena data berupa Array []
     return raw.data.map((item: any) => {

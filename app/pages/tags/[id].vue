@@ -13,7 +13,7 @@
           :key="a.id"
           :image="a.image"
           :title="a.title"
-          :link="a.path"
+          :link="`/articles/${a.id}`"
           :tags="a.tags"
         />
       </div>

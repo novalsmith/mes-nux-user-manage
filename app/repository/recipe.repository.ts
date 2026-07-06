@@ -1,5 +1,5 @@
 // app/core/article/article.repository.ts
-import type { Recipe } from './recipe.entity';
+import type { Recipe } from '../model/recipe.entity';
 
 export interface RecipeRepository {
   findAll(): Promise<Recipe[]>;
