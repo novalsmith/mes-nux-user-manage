@@ -1,9 +1,7 @@
-// app/core/recipe/recipe.interface.ts
-import type { Recipe } from '@/model/recipe.entity';
+import type { Recipe } from '../model/recipe.entity';
 
-export interface RecipeInterface {
-  findAll(): Promise<Recipe[]>;
-  // Tambahkan baris ini:
-  findById(id: string): Promise<any>; 
+export interface RecipeServiceInterface {
+  getRecipes(): Promise<Recipe[]>;
+  getRecipeById(id: string): Promise<Recipe>;
+  getRecipesByTag(tagId: string): Promise<Recipe[]>;
 }
-

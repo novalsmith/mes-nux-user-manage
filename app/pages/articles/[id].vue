@@ -44,7 +44,7 @@
       <!-- Isi Artikel (Body) -->
       <div 
         class="prose prose-lg dark:prose-invert prose-primary max-w-none" 
-        v-html="article.body"
+        v-html="article.content"
       ></div>
     </article>
   </div>
