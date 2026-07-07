@@ -1,15 +1,15 @@
-// app/services/article.service.ts
-import { useArticleApi } from '../implementation/article.api';
-import type { ArticleServiceInterface } from '../interface/article.interface';
-import type { Article } from '../model/article.entity';
+// app/services/recipe.service.ts
+import { useRecipeApi } from '../implementation/RecipeApi';
+import type { IRecipe } from '../interface/IRecipe';
+import type { Recipe } from '../model/RecipeModel';
 
-export const useArticleService = (): ArticleServiceInterface => {
-  const api = useArticleApi();
+export const useRecipeService = (): IRecipe => {
+  const api = useRecipeApi();
   const config = useRuntimeConfig();
     const drupalBaseUrl = config.public.drupalBaseUrl;
  
   // LOGIKA TRANSFORMATION / MAPPER (Pindahan dari API ke Service)
-  const mapRawToArticle = (item: any, included: any[] = []): Article => {
+  const mapRawToRecipe = (item: any, included: any[] = []): Recipe => {
     // 1. Ambil Image URL sesuai logic original dari Drupal JSON:API
     const mediaId = item.relationships?.field_media_image?.data?.id;  
     const mediaItem = included?.find((inc: any) => inc.id === mediaId);  
@@ -32,33 +32,32 @@ export const useArticleService = (): ArticleServiceInterface => {
       title: item.attributes.title,
       content: item.attributes.body?.value || item.attributes.field_body?.processed || '',
       image: imageUrl,  
-      tags: tags,
       path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`
     };
   };
 
   return {
-    async getArticles(): Promise<Article[]> {
+    async getRecipes(): Promise<Recipe[]> {
       const raw = await api.findAll();
       if (!raw || !raw.data) return [];
       
-      return raw.data.map((item: any) => mapRawToArticle(item, raw.included));
+      return raw.data.map((item: any) => mapRawToRecipe(item, raw.included));
     },
 
-    async getArticleById(id: string): Promise<Article> {
+    async getRecipeById(id: string): Promise<Recipe> {
       const raw = await api.findById(id);
       if (!raw || !raw.data) {
-        throw new Error(`Data artikel tidak ditemukan untuk ID: ${id}`);
+        throw new Error(`Data resep tidak ditemukan untuk ID: ${id}`);
       }
       
-      return mapRawToArticle(raw.data, raw.included);
+      return mapRawToRecipe(raw.data, raw.included);
     },
 
-    async getArticlesByTag(tagId: string): Promise<Article[]> {
+    async getRecipesByTag(tagId: string): Promise<Recipe[]> {
       const raw = await api.findByTag(tagId);
       if (!raw || !raw.data) return [];
 
-      return raw.data.map((item: any) => mapRawToArticle(item, raw.included));
+      return raw.data.map((item: any) => mapRawToRecipe(item, raw.included));
     }
   };
 };

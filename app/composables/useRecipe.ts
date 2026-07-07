@@ -1,5 +1,5 @@
 // app/composables/useRecipe.ts
-import { useRecipeService } from '../services/recipe.service';
+import { useRecipeService } from '../services/RecipeService';
 
 
 export const useRecipes = async () => {

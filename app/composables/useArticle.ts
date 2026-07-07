@@ -1,12 +1,14 @@
 // app/composables/useArticle.ts
-import { useArticleService } from '../services/article.service';
+import { useArticleService } from '../services/ArticleService';
 
-
-export const useArticle = async () => {
-const service = useArticleService();
-  const articles = await service.getArticles();
-  return { articles };
-}; 
+ 
+export const useArticle = () => {
+  const service = useArticleService();
+  const { data: articles, pending, error } = useAsyncData('articles-list', () => 
+    service.getArticles()
+  );
+  return { articles, pending, error };
+};
 
 export const useArticleDetail = (id: string) => {
   const service = useArticleService();
