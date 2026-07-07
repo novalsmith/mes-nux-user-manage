@@ -43,6 +43,21 @@ export const useArticleApi = (): ArticleRepository => {
       const url = `${jsonPath}/article?filter[field_tags.id]=${tagId}&include=${includeString}`;
 
       return await $fetch<any>(url).catch(() => null);
+    },
+
+    async searchByTitle(keyword: string, customIncludes?: string[]): Promise<any> {
+      const includeString = getIncludeQuery(customIncludes);
+      
+      // Encode keyword agar aman dari karakter aneh/spasi di URL
+      const encodedKeyword = encodeURIComponent(keyword);
+      
+      const url = `${jsonPath}/article?filter[title-search][condition][path]=title` +
+                  `&filter[title-search][condition][operator]=CONTAINS` +
+                  `&filter[title-search][condition][value]=${encodedKeyword}` +
+                  `&include=${includeString}`;
+
+      return await $fetch<any>(url).catch(() => null);
     }
+
   };
 };
