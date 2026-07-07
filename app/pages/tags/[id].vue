@@ -15,6 +15,8 @@
           :title="a.title"
           :link="`/articles/${a.id}`"
           :tags="a.tags"
+          :author="a.author"
+          :date="a.date"
         />
       </div>
       <div v-else>
