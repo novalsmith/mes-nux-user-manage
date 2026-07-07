@@ -27,3 +27,16 @@ export const getArticlesByTag = (id: string) => {
 
   return { articles, pending, error };
 };
+
+export const useArticleSearch = (keyword: Ref<string>) => {
+  const service = useArticleService();
+
+  const { data: articles, pending, error, refresh } = useAsyncData(
+    // Menggunakan watch agar jika value keyword berubah, useAsyncData otomatis running ulang
+    `articles-search`,
+    () => service.searchArticlesByTitle(keyword.value),
+    { watch: [keyword] }
+  );
+
+  return { articles, pending, error, refresh };
+};

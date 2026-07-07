@@ -77,6 +77,15 @@ export const useArticleService = (): IArticle => {
       if (!raw || !raw.data) return [];
 
       return raw.data.map((item: any) => mapRawToArticle(item, raw.included));
+    },
+ 
+    async searchArticlesByTitle(keyword: string): Promise<ArticleModel[]> {
+      if (!keyword || keyword.trim() === '') return [];
+      
+      const raw = await api.searchByTitle(keyword);
+      if (!raw || !raw.data) return [];
+      
+      return raw.data.map((item: any) => mapRawToArticle(item, raw.included));
     }
   };
 };
