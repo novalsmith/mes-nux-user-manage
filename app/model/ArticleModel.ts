@@ -1,14 +1,16 @@
 // app/core/article/article.entity.ts
-export interface Article {
+export interface ArticleModel {
   id: string;
   title: string;
   content: string;
   image?: string | null;
   path: string;
-  tags: Tag[]
+  date: string;
+  author: string;
+  tags: TagModel[]
 }
 
-export interface Tag {
+export interface TagModel {
   id: string;
   name: string;
 }
