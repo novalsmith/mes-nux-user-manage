@@ -8,7 +8,7 @@
       <RecipeCard 
         v-for="r in recipes" 
         :key="r.id"
-        :image="r.image"
+        :image="r.image?.toString() || ''"
         :title="r.title"
         :link="`/recipes/${r.id}`"
       />
@@ -16,6 +16,11 @@
   </div>
 </template>
 <script setup lang="ts">
-// Pastikan fungsi useRecipe mengembalikan data yang sudah dimap
+useHead({
+    title: 'Recipes',
+    meta: [
+      { name: 'description', content: 'Browse our collection of recipes.' }
+    ]
+  });
 const { recipes } = await useRecipes(); 
 </script>

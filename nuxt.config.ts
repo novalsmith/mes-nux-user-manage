@@ -1,3 +1,5 @@
+import tailwindcss from "@tailwindcss/vite";
+
 // nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -8,6 +10,9 @@ export default defineNuxtConfig({
     port: 3002
   },
   vite: {
+    plugins: [
+      tailwindcss(),// Vite plugin configuration
+    ],
     optimizeDeps: {
       include: ['@vue/devtools-core', '@vue/devtools-kit']
     }

@@ -9,7 +9,8 @@ export const useArticleApi = (): ArticleRepository => {
     'field_media_image',
     'field_media_image.field_media_image',
     'field_tags',
-    'uid'
+    'uid',
+    'field_category'
   ];
 
   // 2. Helper function untuk membangun string include secara dinamis
