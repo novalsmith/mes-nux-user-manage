@@ -26,12 +26,25 @@ export const useArticleService = (): IArticle => {
       return { id: tagRef.id, name: tagItem?.attributes?.name || 'Tag' };
     }) || [];
 
-    // 3. Ambil Nama Author dari Array Included
+
+     const categoryData = item.relationships?.field_category?.data;
+      let category: any[] = [];
+
+      if (categoryData) {
+        // Cari data detail kategori di dalam array 'included' berdasarkan ID
+        const categoryItem = included?.find((inc: any) => inc.id === categoryData.id);
+        category = [{
+          id: categoryData.id,
+          name: categoryItem?.attributes?.name || 'Category'
+        }];
+      }
+     // 3. Ambil Nama Author dari Array Included
     const authorId = item.relationships?.uid?.data?.id;
     const authorItem = included?.find((inc: any) => inc.id === authorId);
     // Menggunakan fallback jika display_name / name tidak ditemukan
     const authorName = authorItem?.attributes?.display_name || authorItem?.attributes?.name || 'Admin';
 
+ 
     // 4. Format Tanggal Posting (Format Indonesia: DD MMMM YYYY)
     const rawDate = item.attributes.created;
     const formattedDate = rawDate 
@@ -51,6 +64,11 @@ export const useArticleService = (): IArticle => {
       tags: tags,
       date: formattedDate,
       author: authorName,
+      toc: item.attributes.field_toc || [],
+      authorAvatar: authorItem?.attributes?.user_picture?.url ? `${drupalBaseUrl}${authorItem.attributes.user_picture.url}` : null,
+      description: item.attributes.field_description || null,
+      authors: item.attributes.field_authors || null,
+      category: category, // Ambil nama kategori pertama jika ada
       path: item.attributes.path?.alias || `/node/${item.attributes.drupal_internal__nid}`
     };
   };

@@ -7,21 +7,27 @@
     </h1>
     
     <!-- Status Loading -->
-    <div v-if="pending" class="flex justify-center items-center py-12 text-gray-500">
+    <!-- <div v-if="pending" class="flex justify-center items-center py-12 text-gray-500">
       <p>Loading articles...</p>
-    </div>
+    </div> -->
+
+    <template v-if="pending">
+      <ArticleCard v-for="n in 6" :key="'skeleton-' + n" :loading="true" />
+    </template>
 
     <!-- Tampilkan data jika berhasil di-load -->
     <div v-else-if="articles && articles.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <ArticleCard 
         v-for="a in articles" 
         :key="a.id"
-        :image="a.image"
+        :loading="false"
+        :image="a.image?.toString() || ''"
         :title="a.title"
         :link="`/articles/${a.id}`"
         :tags="a.tags"
         :author="a.author"
         :date="a.date"
+        :category="a.category"
       />
     </div>
 
@@ -34,6 +40,12 @@
 
 <script setup lang="ts">
 import { useArticleService } from '~/services/ArticleService'
+  useHead({
+    title: 'Article',
+    meta: [
+      { name: 'description', content: 'Browse our collection of articles.' }
+    ]
+  });
 
 const route = useRoute()
 const articleService = useArticleService()

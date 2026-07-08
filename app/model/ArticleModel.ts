@@ -7,10 +7,25 @@ export interface ArticleModel {
   path: string;
   date: string;
   author: string;
-  tags: TagModel[]
+  tags: TagModel[],
+  toc: TocItem[],
+  authorAvatar?: string | null;
+  description?: string | null;
+  authors?: string | null;
+  category: CategoryModel[];
+}
+
+export interface CategoryModel {
+  id: string;
+  name: string;
 }
 
 export interface TagModel {
   id: string;
   name: string;
+}
+export interface TocItem {
+  id: string;
+  text: string;
+  active: boolean;
 }

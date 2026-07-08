@@ -6,3 +6,12 @@
     
   </div>
 </template>
+
+<script setup lang="ts">
+  useHead({
+    title: 'Home',
+    meta: [
+      { name: 'description', content: 'Welcome to our restaurant!' }
+    ]
+  });
+</script>
