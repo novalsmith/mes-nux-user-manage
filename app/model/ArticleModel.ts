@@ -8,7 +8,6 @@ export interface ArticleModel {
   date: string;
   author: string;
   tags: TagModel[],
-  toc: TocItem[],
   authorAvatar?: string | null;
   description?: string | null;
   authors?: string | null;
@@ -23,9 +22,4 @@ export interface CategoryModel {
 export interface TagModel {
   id: string;
   name: string;
-}
-export interface TocItem {
-  id: string;
-  text: string;
-  active: boolean;
 }
