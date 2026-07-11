@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       tailwindcss(),// Vite plugin configuration
     ],
     optimizeDeps: {
-      include: ['@vue/devtools-core', '@vue/devtools-kit']
+      include: ['@vue/devtools-core', '@vue/devtools-kit','pinia']
     }
   },
   runtimeConfig: {

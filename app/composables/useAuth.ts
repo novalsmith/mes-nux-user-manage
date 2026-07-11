@@ -1,14 +1,17 @@
 // composables/useAuth.ts
 import { AuthDatasource } from '../implementation/Auth';
 import { AuthRepositoryImpl } from '../services/AuthService';
+import { useAuthState } from './useAuthState'; // Pastikan path import ini sesuai dengan lokasi file Anda
 
 export const useAuth = () => {
   const config = useRuntimeConfig();
   const datasource = new AuthDatasource();
   const repository = new AuthRepositoryImpl(datasource, config);
-
+  
+  // 1. Ambil state global dari useAuthState
+  const { user, setUser, clearAuth } = useAuthState();
+  
   const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 });
-  const userState = useState<any>('auth_user', () => null);
   const loading = ref(false);
   const errorMessage = ref('');
 
@@ -16,13 +19,14 @@ export const useAuth = () => {
     loading.value = true;
     errorMessage.value = '';
     try {
-      // 1. Ambil Token langsung via Nuxt Server API
+      // 1. Ambil Token OAuth
       const tokens = await repository.login(username, password);
       tokenCookie.value = tokens.accessToken;
 
-      // 2. Ambil data User Info
+      // 2. Ambil data User Info dari Drupal
       const rawUser = await repository.getCurrentUser(tokens.accessToken);
-      userState.value = {
+      
+      const cleanUserData = {
         id: rawUser.id,
         roles: rawUser.roles,
         permissions: rawUser.permissions,
@@ -32,25 +36,29 @@ export const useAuth = () => {
         name: rawUser.name
       };
 
-      // 3. SELESAI: Redirect ke Dashboard Utama jika sukses
-      navigateTo('/');
+      // 3. Simpan data user ke dalam useState (Aman dari async gap & SSR)
+      setUser(cleanUserData);
+
+      return cleanUserData;
     } catch (error: any) {
-      // GAGAL: Tetap di halaman login, tampilkan pesan error
       console.error('Login failed:', error);
       errorMessage.value = error.statusMessage || 'Username atau password salah.';
+      return null;
     } finally {
       loading.value = false;
     }
   };
 
+  // 4. Tambahkan fungsi logout agar pengelolaan auth terpusat
   const logout = () => {
     tokenCookie.value = null;
-    userState.value = null;
+    clearAuth();
     navigateTo('/login');
   };
 
   return {
-    user: computed(() => userState.value),
+    // Kembalikan data user reaktif dan status login langsung ke pemanggil
+    user: computed(() => user.value),
     isLoggedIn: computed(() => !!tokenCookie.value),
     loading,
     errorMessage,

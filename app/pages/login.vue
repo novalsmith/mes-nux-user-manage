@@ -100,24 +100,27 @@
     </UCard>
   </div>
 </template>
-
+ 
+<!-- pages/login.vue -->
 <script setup>
 import { useAuth } from '~/composables/useAuth';
 
-// Pasang layout polos khusus auth agar berbeda tema dengan dashboard internal
+const username = ref('');
+const password = ref('');
+const showPassword = ref(false);
+
+const { executeLogin, loading, errorMessage } = useAuth();
+
 definePageMeta({
   layout: 'auth'
 });
 
-const username = ref('');
-const password = ref('');
-const showPassword = ref(false); // State untuk toggle visibilitas password
-
-const { executeLogin, loading, errorMessage } = useAuth();
-
-const handleFormLogin = () => {
+const handleFormLogin = async () => {
   if (username.value && password.value) {
-    executeLogin(username.value, password.value);
+    const success = await executeLogin(username.value, password.value);
+    if (success) {
+      navigateTo('/');
+    }
   }
 };
 </script>

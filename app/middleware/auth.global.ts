@@ -1,20 +1,19 @@
 // middleware/auth.global.ts
-export default defineNuxtRouteMiddleware((to, from) => {
-  // Ambil cookie auth_token yang sudah diset di composable useAuth
+export default defineNuxtRouteMiddleware((to) => {
+  // Ambil token cookie yang sudah dijamin aman dan didukung penuh oleh SSR Nuxt
   const tokenCookie = useCookie('auth_token');
+  const isLoggedIn = !!tokenCookie.value;
 
-  // Daftar halaman yang boleh diakses TANPA login
-  const publicPages = ['/login'];
-
-  // Jika token TIDAK ADA dan user mencoba mengakses halaman terproteksi (seperti /)
-  if (!tokenCookie.value && !publicPages.includes(to.path)) {
-    // Paksa redirect ke halaman login
-    return navigateTo('/login');
+  // Halaman login tidak boleh diakses jika user sudah terotentikasi
+  if (to.path === '/login') {
+    if (isLoggedIn) {
+      return navigateTo('/');
+    }
+    return;
   }
 
-  // Jika token ADA dan user yang sudah login mencoba iseng membuka halaman /login lagi
-  if (tokenCookie.value && to.path === '/login') {
-    // Kembalikan ke dashboard utama
-    return navigateTo('/');
+  // Jika mencoba masuk ke dashboard tanpa token, langsung tendang ke /login
+  if (!isLoggedIn) {
+    return navigateTo('/login');
   }
 });
