@@ -14,13 +14,15 @@ export default defineNuxtConfig({
       tailwindcss(),// Vite plugin configuration
     ],
     optimizeDeps: {
-      include: ['@vue/devtools-core', '@vue/devtools-kit']
+      include: ['@vue/devtools-core', '@vue/devtools-kit','pinia']
     }
   },
   runtimeConfig: {
+    oauthClientSecret: process.env.OAUTH_CLIENT_SECRET,
     public: {
       drupalBaseUrl: process.env.DRUPAL_BASE_URL || 'http://localhost:8080',
-      baseUrl: process.env.BASE_URL || 'http://localhost:3032',
+      baseUrl: process.env.BASE_URL || 'http://localhost:3002',
+      oauthClientId: process.env.OAUTH_CLIENT_ID
     }
   }
 })
