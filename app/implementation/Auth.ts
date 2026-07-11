@@ -1,8 +1,9 @@
+// implementation/Auth.ts
 export class AuthDatasource {
-  async exchangeCode(code: string, codeVerifier: string): Promise<any> {
+  async loginWithCredentials(username: string, password: string): Promise<any> {
     return await $fetch('/api/auth/token', {
       method: 'POST',
-      body: { code, codeVerifier }
+      body: { username, password }
     });
   }
 

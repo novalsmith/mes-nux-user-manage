@@ -1,31 +1,30 @@
+<!-- pages/index.vue -->
 <template>
-  <div style="padding: 40px; text-align: center; font-family: sans-serif;">
-    <div v-if="isLoggedIn && user">
-      <h1 style="color: #22c55e;">🎉 Koneksi OAuth2 Sukses!</h1>
-      <p style="font-size: 1.2rem; margin-top: 20px;">
-        Selamat Datang, <strong>{{ user.name }}</strong>!
-      </p>
-      
-      <div style="margin-top: 30px;padding: 20px; display: inline-block; text-align: left; border-radius: 8px;">
-        <h3 style="margin-top: 0;">Payload Data dari Drupal (Clean Architecture Model):</h3>
-        <pre><code>{{ user }}</code></pre>
-      </div>
-    </div>
+  <div class="dashboard-content">
+    <!-- Konten di bawah ini dijamin aman karena hanya bisa diakses setelah login sukses -->
+    <h1 class="text-3xl font-bold text-green-500 mb-4">🎉 Koneksi OAuth2 Sukses!</h1>
+    <p class="text-lg">
+      Selamat Datang di Dashboard, <strong>{{ user?.name }} </strong>!
+    </p>
     
-    <div v-else-if="loading">
-      <h2>Memuat profil pengguna dari Drupal...</h2>
+    <div class="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg text-left">
+      <h3 class="font-semibold mb-2">Payload Data Terotentikasi:</h3>
+      <pre class="text-xs overflow-x-auto"><code>{{ user }}</code></pre>
     </div>
-    
-    <div v-else>
-      <h1 style="color: #ef4444;">Akses Ditolak</h1>
-      <p>Anda belum melakukan autentikasi lewat Drupal.</p>
-      <NuxtLink to="/login">Kembali ke Halaman Login</NuxtLink>
-    </div>
+
+    <UButton @click="logout" color="neutral" variant="ghost" class="mt-4">
+      Log Out
+    </UButton>
   </div>
 </template>
 
 <script setup>
 import { useAuth } from '~/composables/useAuth';
 
-const { user, isLoggedIn, loading } = useAuth();
+definePageMeta({
+  layout: 'default'
+});
+
+const { user, logout } = useAuth();
+// Logika onMounted penendang sudah dihapus karena sudah ditangani Middleware secara global
 </script>

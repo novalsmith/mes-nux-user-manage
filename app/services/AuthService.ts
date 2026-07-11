@@ -2,25 +2,14 @@ import type { AuthRepository } from '../repository/AuthRepository';
 import type { AuthDatasource } from '../implementation/Auth';
 import type { AuthTokens, User } from '../model/AuthModel';
 
+// services/AuthService.ts
 export class AuthRepositoryImpl implements AuthRepository {
-  constructor(
-    private datasource: AuthDatasource,
-    private config: any
-  ) {}
+  constructor(private datasource: AuthDatasource, private config: any) {}
 
-  // UBAH: Jadikan method ini async karena harus mengambil data dari API Server Nuxt
-  async getAuthorizationUrl(): Promise<string> {
-    try {
-      const data: any = await $fetch('/api/auth/authorize');
-      return data.url;
-    } catch (error) {
-      console.error('Gagal mendapatkan URL otorisasi dari server:', error);
-      throw error;
-    }
-  }
+  // Sudah tidak membutuhkan getAuthorizationUrl karena tidak ada redirect
 
-  async exchangeCodeForToken(code: string, codeVerifier: string): Promise<AuthTokens> {
-    const data = await this.datasource.exchangeCode(code, codeVerifier);
+  async login(username: string, password: string): Promise<AuthTokens> {
+    const data = await this.datasource.loginWithCredentials(username, password);
     return {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
@@ -32,13 +21,13 @@ export class AuthRepositoryImpl implements AuthRepository {
     const response = await this.datasource.fetchMe(token);
     if (!response) return { id: '', roles: [], permissions: {} };
     return {
-    id: response.id,               // Mengambil nilai "1"
-    roles: response.roles || [], 
-    permissions: response.permissions || {},
-    email: response.email,
-    profile: response.profile,
-    preferred_username: response.preferred_username,
-    name: response.name
-  };
+      id: response.id,
+      roles: response.roles || [], 
+      permissions: response.permissions || {},
+      email: response.email,
+      profile: response.profile,
+      preferred_username: response.preferred_username,
+      name: response.name
+    };
   }
 }
