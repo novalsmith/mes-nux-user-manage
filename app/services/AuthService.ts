@@ -30,4 +30,20 @@ export class AuthRepositoryImpl implements AuthRepository {
       name: response.name
     };
   }
+
+async register(registerData: any): Promise<boolean> {
+  try {
+    // Cukup teruskan object data form bersih ke proxy lokal Nuxt
+    await this.datasource.register({
+      username: registerData.username,
+      email: registerData.email,
+      password: registerData.password
+    });
+    return true;
+  } catch (error: any) {
+    // Menangkap pesan error asli jika email/username sudah terdaftar
+    const message = error.data?.statusMessage || 'Gagal melakukan registrasi.';
+    throw new Error(message);
+  }
+}
 }

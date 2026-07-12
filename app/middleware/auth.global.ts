@@ -4,15 +4,18 @@ export default defineNuxtRouteMiddleware((to) => {
   const tokenCookie = useCookie('auth_token');
   const isLoggedIn = !!tokenCookie.value;
 
-  // Halaman login tidak boleh diakses jika user sudah terotentikasi
-  if (to.path === '/login') {
+  // Daftar halaman publik yang bebas diakses tanpa login
+  const publicRoutes = ['/login', '/register']
+
+  // Jika user SUDAH login, mereka tidak boleh mengakses halaman publik (login/register)
+  if (publicRoutes.includes(to.path)) {
     if (isLoggedIn) {
       return navigateTo('/');
     }
     return;
   }
 
-  // Jika mencoba masuk ke dashboard tanpa token, langsung tendang ke /login
+  // Jika mencoba masuk ke halaman terproteksi tanpa token, langsung tendang ke /login
   if (!isLoggedIn) {
     return navigateTo('/login');
   }

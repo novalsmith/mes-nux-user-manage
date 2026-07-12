@@ -12,4 +12,12 @@ export class AuthDatasource {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
+
+  async register(payload: any): Promise<any> {
+    //Menembak ke proxy internal Nuxt Server, otomatis aman dari CORS!
+    return await $fetch('/api/auth/register', {
+      method: 'POST',
+      body: payload
+    });
+  }
 }
