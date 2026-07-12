@@ -1,13 +1,11 @@
 <!-- pages/login.vue -->
 <template>
   <div class="w-full max-w-md p-2">
-    <!-- Card Container dengan efek Glassmorphism tipis / bayangan lembut -->
     <UCard class="shadow-xl border border-gray-200/50 dark:border-gray-800/50 backdrop-blur-sm">
       
       <!-- Header Area -->
       <template #header>
         <div class="text-center py-2">
-          <!-- Ganti dengan komponen <Logo /> Anda jika ingin menampilkan logo di atas -->
           <div class="flex justify-center mb-4">
             <div class="p-3 bg-primary-50 dark:bg-primary-950/50 text-primary rounded-2xl ring-4 ring-primary-500/10">
               <UIcon name="i-lucide-lock" class="w-6 h-6" />
@@ -22,7 +20,7 @@
         </div>
       </template>
 
-      <!-- Alert Notification Berbahaya/Gagal -->
+      <!-- Alert Notification -->
       <UAlert
         v-if="errorMessage"
         color="danger"
@@ -35,8 +33,6 @@
 
       <!-- Form Area -->
       <form @submit.prevent="handleFormLogin" class="space-y-4">
-        
-        <!-- Field Username / Email -->
         <UFormField label="Username atau Email" name="username" size="md">
           <UInput
             v-model="username"
@@ -49,7 +45,6 @@
           />
         </UFormField>
 
-        <!-- Field Password dengan Fitur Toggle Mata -->
         <UFormField label="Password" name="password" size="md">
           <UInput
             v-model="password"
@@ -60,7 +55,6 @@
             class="w-full"
             required
           >
-            <!-- Slot tombol mata di sebelah kanan input -->
             <template #trailing>
               <UButton
                 color="neutral"
@@ -73,7 +67,6 @@
           </UInput>
         </UFormField>
 
-        <!-- Tombol Submit -->
         <div class="pt-2">
           <UButton 
             type="submit" 
@@ -90,10 +83,16 @@
         </div>
       </form>
 
-      <!-- Footer Tambahan (Opsional) -->
+      <!-- 🌟 Footer Modifikasi: Ditambahkan Link ke Halaman Register -->
       <template #footer>
-        <div class="text-center text-[11px] text-gray-400 dark:text-gray-500">
-          Dilindungi oleh sistem enkripsi terintegrasi Drupal OAuth2.
+        <div class="flex flex-col items-center gap-2 text-center text-[11px] text-gray-400 dark:text-gray-500">
+          <div>Dilindungi oleh sistem enkripsi terintegrasi Drupal OAuth2.</div>
+          <div class="text-xs mt-1 text-gray-500 dark:text-gray-400">
+            Belum punya akun? 
+            <NuxtLink to="/register" class="text-primary hover:underline font-semibold ml-1">
+              Daftar di sini
+            </NuxtLink>
+          </div>
         </div>
       </template>
 
@@ -101,7 +100,6 @@
   </div>
 </template>
  
-<!-- pages/login.vue -->
 <script setup>
 import { useAuth } from '~/composables/useAuth';
 

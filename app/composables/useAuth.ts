@@ -56,6 +56,21 @@ export const useAuth = () => {
     navigateTo('/login');
   };
 
+  const executeRegister = async (fields: any) => {
+    loading.value = true;
+    errorMessage.value = '';
+    try {
+      const success = await repository.register(fields);
+      return success;
+    } catch (error: any) {
+      console.error('Registration failed:', error);
+      errorMessage.value = error.message || 'Terjadi kesalahan saat mendaftar.';
+      return false;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     // Kembalikan data user reaktif dan status login langsung ke pemanggil
     user: computed(() => user.value),
@@ -63,6 +78,7 @@ export const useAuth = () => {
     loading,
     errorMessage,
     executeLogin,
+    executeRegister,
     logout
   };
 };
