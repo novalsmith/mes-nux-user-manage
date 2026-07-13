@@ -3,6 +3,11 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { useAuth } from '~/composables/useAuth'
 
+definePageMeta({
+  addMidleware: ['auth']
+})
+ 
+
 const route = useRoute()
 const { user, logout } = useAuth()
 

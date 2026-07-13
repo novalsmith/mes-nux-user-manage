@@ -10,6 +10,7 @@ export const useArticleApi = (): ArticleRepository => {
     'field_media_image.field_media_image',
     'field_tags',
     'uid',
+    'uid.user_picture', // <-- Ditambahkan di sini agar URL foto user otomatis ikut terambil
     'field_category'
   ];
 

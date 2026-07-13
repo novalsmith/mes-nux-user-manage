@@ -26,23 +26,32 @@ export const useArticleService = (): IArticle => {
       return { id: tagRef.id, name: tagItem?.attributes?.name || 'Tag' };
     }) || [];
 
+    const categoryData = item.relationships?.field_category?.data;
+    let category: any[] = [];
 
-     const categoryData = item.relationships?.field_category?.data;
-      let category: any[] = [];
+    if (categoryData) {
+      // Cari data detail kategori di dalam array 'included' berdasarkan ID
+      const categoryItem = included?.find((inc: any) => inc.id === categoryData.id);
+      category = [{
+        id: categoryData.id,
+        name: categoryItem?.attributes?.name || 'Category'
+      }];
+    }
 
-      if (categoryData) {
-        // Cari data detail kategori di dalam array 'included' berdasarkan ID
-        const categoryItem = included?.find((inc: any) => inc.id === categoryData.id);
-        category = [{
-          id: categoryData.id,
-          name: categoryItem?.attributes?.name || 'Category'
-        }];
-      }
-     // 3. Ambil Nama Author dari Array Included
+    // 3. Ambil Nama Author dan Avatar dari Array Included
     const authorId = item.relationships?.uid?.data?.id;
     const authorItem = included?.find((inc: any) => inc.id === authorId);
     // Menggunakan fallback jika display_name / name tidak ditemukan
     const authorName = authorItem?.attributes?.display_name || authorItem?.attributes?.name || 'Admin';
+
+    // Ambil ID File foto profile user
+    const avatarFileId = authorItem?.relationships?.user_picture?.data?.id;
+    // Cari objek file asli berdasarkan ID tersebut di dalam array included
+    const avatarFileItem = included?.find((inc: any) => inc.id === avatarFileId);
+    
+    const authorAvatarUrl = avatarFileItem?.attributes?.uri?.url 
+      ? `${drupalBaseUrl}${avatarFileItem.attributes.uri.url}` 
+      : null;
 
  
     // 4. Format Tanggal Posting (Format Indonesia: DD MMMM YYYY)
@@ -64,7 +73,7 @@ export const useArticleService = (): IArticle => {
       tags: tags,
       date: formattedDate,
       author: authorName, 
-      authorAvatar: authorItem?.attributes?.user_picture?.url ? `${drupalBaseUrl}${authorItem.attributes.user_picture.url}` : null,
+      authorAvatar: authorAvatarUrl, // Selesai disesuaikan menggunakan URL penuh
       description: item.attributes.field_description || null,
       authors: item.attributes.field_authors || null,
       category: category, // Ambil nama kategori pertama jika ada
