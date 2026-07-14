@@ -42,7 +42,7 @@ export const useArticleService = (): IArticle => {
     const authorId = item.relationships?.uid?.data?.id;
     const authorItem = included?.find((inc: any) => inc.id === authorId);
     // Menggunakan fallback jika display_name / name tidak ditemukan
-    const authorName = authorItem?.attributes?.display_name || authorItem?.attributes?.name || 'Admin';
+    const authorName = authorItem?.attributes?.field_full_name || authorItem?.attributes?.name || 'Admin';
 
     // Ambil ID File foto profile user
     const avatarFileId = authorItem?.relationships?.user_picture?.data?.id;

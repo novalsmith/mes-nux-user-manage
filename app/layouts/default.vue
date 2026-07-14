@@ -17,9 +17,11 @@ const open = ref(false)
 // Navigasi Utama Aplikasi
 const items = computed<NavigationMenuItem[]>(() => [
   { label: 'Home', to: '/', active: route.path === '/', icon: 'i-lucide-house' },
-  { label: 'Articles', to: '/articles', active: route.path === '/articles', icon: 'i-lucide-book-open' },
-  { label: 'Recipes', to: '/recipes', active: route.path === '/recipes', icon: 'i-lucide-chef-hat' },
-  { label: 'Releases', to: 'https://github.com/nuxt/ui/releases', target: '_blank', icon: 'i-lucide-git-branch' }
+  { label: 'Artikel', to: '/articles', active: route.path === '/articles', icon: 'i-lucide-book-open' },
+  { label: 'Ulang Tahun', to: '/birthdays', active: route.path === '/birthdays', icon: 'i-lucide-calendar' },
+  { label: 'Ulang Tahun Pernikahan', to: '/anniversaries', active: route.path === '/anniversaries', icon: 'i-lucide-calendar' },
+  // { label: 'Recipes', to: '/recipes', active: route.path === '/recipes', icon: 'i-lucide-chef-hat' },
+  // { label: 'Releases', to: 'https://github.com/nuxt/ui/releases', target: '_blank', icon: 'i-lucide-git-branch' }
 ])
 
 // Menu Pengaturan khusus User
@@ -41,7 +43,7 @@ const handleLogout = () => {
     <!-- 2. SIDEBAR DENGAN MODE OFFCANVAS -->
     <USidebar
       v-model:open="open"
-      variant="outline"
+      variant="floating"
       collapsible="offcanvas" 
       side="left"
       :ui="{
@@ -100,7 +102,7 @@ const handleLogout = () => {
 
           <UButton
             icon="i-lucide-log-out"
-            color="danger"
+            color="warning"
             variant="ghost"
             label="Keluar Aplikasi"
             block
