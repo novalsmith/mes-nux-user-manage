@@ -18,8 +18,8 @@ const open = ref(false)
 const items = computed<NavigationMenuItem[]>(() => [
   { label: 'Home', to: '/', active: route.path === '/', icon: 'i-lucide-house' },
   { label: 'Artikel', to: '/articles', active: route.path === '/articles', icon: 'i-lucide-book-open' },
+  { label: 'Jemaat', to: '/users', active: route.path === '/users', icon: 'i-lucide-users' },
   { label: 'Ulang Tahun', to: '/birthdays', active: route.path === '/birthdays', icon: 'i-lucide-calendar' },
-  { label: 'Ulang Tahun Pernikahan', to: '/anniversaries', active: route.path === '/anniversaries', icon: 'i-lucide-calendar' },
   // { label: 'Recipes', to: '/recipes', active: route.path === '/recipes', icon: 'i-lucide-chef-hat' },
   // { label: 'Releases', to: 'https://github.com/nuxt/ui/releases', target: '_blank', icon: 'i-lucide-git-branch' }
 ])
@@ -59,7 +59,7 @@ const handleLogout = () => {
             color="neutral"
             variant="ghost"
             class="lg:hidden"
-            @click="open = false"
+            @click="() => { open = false }"
           />
         </div>
       </template>
@@ -73,7 +73,7 @@ const handleLogout = () => {
             :items="items"
             orientation="vertical"
             :ui="{ link: 'p-1.5 overflow-hidden' }"
-            @click="open = false"  
+            @click="() => { open = false }"  
           />
           <UDivider class="my-4" />
         </div>
@@ -127,7 +127,7 @@ const handleLogout = () => {
             color="neutral"
             variant="ghost"
             aria-label="Open menu"
-            @click="open = !open"
+            @click="() => { open = !open }"
           />
           <Logo class="h-5 w-auto" />
         </div>
