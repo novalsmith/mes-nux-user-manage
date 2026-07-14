@@ -6,14 +6,10 @@
       {{ searchKeyword ? `Search Results for "${searchKeyword}"` : 'Articles' }}
     </h1>
     
-    <!-- Status Loading -->
-    <!-- <div v-if="pending" class="flex justify-center items-center py-12 text-gray-500">
-      <p>Loading articles...</p>
-    </div> -->
-
-    <template v-if="pending">
+    <!-- Status Loading (Skeleton dengan Layout Grid yang Sesuai) -->
+    <div v-if="pending" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <ArticleCard v-for="n in 6" :key="'skeleton-' + n" :loading="true" />
-    </template>
+    </div>
 
     <!-- Tampilkan data jika berhasil di-load -->
     <div v-else-if="articles && articles.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -26,8 +22,10 @@
         :link="`/articles/${a.id}`"
         :tags="a.tags"
         :author="a.author"
+        :authorAvatar="a.authorAvatar || ''"  
         :date="a.date"
         :category="a.category"
+        :description="a.description || ''" 
       />
     </div>
 
@@ -40,12 +38,13 @@
 
 <script setup lang="ts">
 import { useArticleService } from '~/services/ArticleService'
-  useHead({
-    title: 'Article',
-    meta: [
-      { name: 'description', content: 'Browse our collection of articles.' }
-    ]
-  });
+
+useHead({
+  title: 'Article',
+  meta: [
+    { name: 'description', content: 'Browse our collection of articles.' }
+  ]
+});
 
 const route = useRoute()
 const articleService = useArticleService()
@@ -71,5 +70,3 @@ const { data: articles, pending } = await useAsyncData(
   }
 )
 </script>
-
- 
