@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { h, resolveComponent } from 'vue'
+import { h, resolveComponent, ref, computed } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { useUsersManagement } from '~/composables/useUsers'
 import type { UserModel } from '~/model/UserModel'
-
+ 
 const UBadge = resolveComponent('UBadge')
 const UAvatar = resolveComponent('UAvatar')
 
@@ -139,22 +139,46 @@ const columns: TableColumn<UserModel>[] = [
       </div>
     </div>
 
-    <!-- State Loading -->
-    <div v-if="pending" class="flex justify-center items-center py-12 text-gray-500 flex-1">
-      <p>Memuat data warga...</p>
+    <!-- State 1: Loading (Skeleton Table) -->
+    <div v-if="pending" class="flex flex-col gap-4 flex-1">
+      <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+        <!-- Header Tabel Bayangan -->
+        <div class="grid grid-cols-7 gap-4 p-4 bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+          <div v-for="n in 7" :key="'h-'+n"><USkeleton class="h-4 w-20" /></div>
+        </div>
+        
+        <!-- Baris Data Bayangan (Looping 5 baris skeleton) -->
+        <div v-for="i in 5" :key="i" class="grid grid-cols-7 gap-4 p-4 border-b border-gray-100 dark:border-gray-800 items-center">
+          <div class="flex items-center justify-start">
+            <USkeleton class="h-8 w-8 rounded-full" />
+          </div>
+          <div><USkeleton class="h-4 w-3/4" /></div>
+          <div><USkeleton class="h-4 w-1/2" /></div>
+          <div><USkeleton class="h-5 w-24 rounded" /></div>
+          <div><USkeleton class="h-4 w-20" /></div>
+          <div><USkeleton class="h-4 w-20" /></div>
+          <div class="flex gap-1"><USkeleton class="h-5 w-16 rounded" /></div>
+        </div>
+      </div>
+
+      <!-- Footer Pagination Bayangan -->
+      <div class="flex items-center justify-between pt-2 px-2">
+        <USkeleton class="h-4 w-40" />
+        <USkeleton class="h-8 w-48" />
+      </div>
     </div>
 
-    <!-- State Error -->
+    <!-- State 2: Error -->
     <div v-else-if="error" class="text-center py-12 text-red-500">
       Gagal memuat data warga dari server. Silakan coba lagi.
     </div>
 
-    <!-- State Data Kosong -->
+    <!-- State 3: Data Kosong -->
     <div v-else-if="users.length === 0" class="text-center py-12 text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 flex-1 flex flex-col items-center justify-center">
       <p>Tidak ada data warga yang cocok dengan kriteria filter.</p>
     </div>
 
-    <!-- Main Content Area (Table + Paging) -->
+    <!-- State 4: Main Content Area (Table + Paging) -->
     <div v-else class="flex flex-col gap-4 flex-1">
       <!-- Tabel Utama -->
       <UTable :data="users" :columns="columns" class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden" />

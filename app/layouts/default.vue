@@ -3,9 +3,9 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { useAuth } from '~/composables/useAuth'
 
-definePageMeta({
-  addMidleware: ['auth']
-})
+// definePageMeta({
+//   addMidleware: ['auth']
+// })
  
 
 const route = useRoute()
@@ -26,8 +26,8 @@ const items = computed<NavigationMenuItem[]>(() => [
 
 // Menu Pengaturan khusus User
 const userSettingsItems = computed<NavigationMenuItem[]>(() => [
-  { label: 'Profile Settings', to: '/user/profile', icon: 'i-lucide-user-cog' },
-  { label: 'Account Security', to: '/user/security', icon: 'i-lucide-shield-check' }
+  { label: 'Jemaat', to: '/users', active: route.path === '/users', icon: 'i-lucide-users' },
+  { label: 'Ulang Tahun', to: '/birthdays', active: route.path === '/birthdays', icon: 'i-lucide-calendar' },
 ])
 
 // Fungsi bantu untuk menutup sidebar otomatis saat navigasi atau logout
@@ -75,7 +75,7 @@ const handleLogout = () => {
             :ui="{ link: 'p-1.5 overflow-hidden' }"
             @click="() => { open = false }"  
           />
-          <UDivider class="my-4" />
+          <!-- <UDivider class="my-4" /> -->
         </div>
 
         <div>
