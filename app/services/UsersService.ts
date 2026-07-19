@@ -1,5 +1,5 @@
 // app/services/users.service.ts
-import { useUsersApi } from '../implementation/UsersApi';
+import { useUsersApi } from '../infrastructure/drupal/UsersApi';
 import type { IUsers } from '../interface/IUsers';
 import type { UserModel } from '../model/UserModel';
 

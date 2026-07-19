@@ -1,5 +1,5 @@
 // app/implementation/recipe.api.ts
-import type { RecipeRepository } from '../repository/RecipeRepository';
+import type { RecipeRepository } from '../../repository/RecipeRepository';
 
 export const useRecipeApi = (): RecipeRepository => {
   // Ganti drupalBaseUrl eksternal dengan proxy internal Nuxt

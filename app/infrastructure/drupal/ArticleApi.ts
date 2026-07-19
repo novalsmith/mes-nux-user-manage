@@ -1,5 +1,5 @@
 // app/implementation/article.api.ts
-import type { ArticleRepository } from '../repository/ArticleRepository';
+import type { ArticleRepository } from '../../repository/ArticleRepository';
 
 export const useArticleApi = (): ArticleRepository => {
   const jsonPath = '/api/drupal/jsonapi/node';

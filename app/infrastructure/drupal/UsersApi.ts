@@ -1,5 +1,5 @@
 // app/implementation/users.api.ts
-import type { UsersRepository } from '../repository/UsersRepository';
+import type { UsersRepository } from '../../repository/UsersRepository';
 
 export const useUsersApi = (): UsersRepository => {
   // Drupal JSON:API path khusus untuk core entity User
