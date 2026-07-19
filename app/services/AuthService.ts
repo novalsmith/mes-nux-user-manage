@@ -1,49 +1,120 @@
-import type { AuthRepository } from '../repository/AuthRepository';
-import type { AuthDatasource } from '../implementation/Auth';
-import type { AuthTokens, User } from '../model/AuthModel';
+// app/services/AuthService.ts
 
-// services/AuthService.ts
-export class AuthRepositoryImpl implements AuthRepository {
-  constructor(private datasource: AuthDatasource, private config: any) {}
+import { AuthDatasource } from '~/infrastructure/drupal/Auth';
 
-  // Sudah tidak membutuhkan getAuthorizationUrl karena tidak ada redirect
+import type { AuthRepository } from '~/repository/AuthRepository';
 
-  async login(username: string, password: string): Promise<AuthTokens> {
-    const data = await this.datasource.loginWithCredentials(username, password);
-    return {
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      expiresIn: data.expires_in
-    };
+import type {
+  AuthTokens,
+  LoginRequest,
+  OAuthTokenResponse,
+  RegisterRequest,
+  User,
+} from '~/model/AuthModel';
+
+export class AuthService implements AuthRepository {
+
+  constructor(
+    private readonly datasource: AuthDatasource,
+  ) {}
+
+  /**
+   * Login
+   */
+  async login(
+    request: LoginRequest,
+  ): Promise<AuthTokens> {
+
+    const response: OAuthTokenResponse =
+      await this.datasource.login(request);
+
+    return this.mapTokens(response);
+
   }
 
-  async getCurrentUser(token: string): Promise<User> {
-    const response = await this.datasource.fetchMe(token);
-    if (!response) return { id: '', roles: [], permissions: {} };
+  /**
+   * Refresh Access Token
+   */
+  async refresh(
+    refreshToken: string,
+  ): Promise<AuthTokens> {
+
+    return await this.datasource.refreshToken(
+      refreshToken,
+    );
+
+  }
+
+  /**
+   * Current User
+   */
+  async getCurrentUser(
+    accessToken: string,
+  ): Promise<User> {
+
+    const response =
+      await this.datasource.fetchMe(accessToken);
+
     return {
+
       id: response.id,
-      roles: response.roles || [], 
-      permissions: response.permissions || {},
+
+      roles: response.roles ?? [],
+
+      permissions:
+        response.permissions ?? {},
+
       email: response.email,
+
       profile: response.profile,
-      preferred_username: response.preferred_username,
-      name: response.name
+
+      preferred_username:
+        response.preferred_username,
+
+      name: response.name,
+
+      avatar: response.avatar,
+
+      birthdate:
+        response.birthdate ?? null,
+
     };
+
   }
 
-async register(registerData: any): Promise<boolean> {
-  try {
-    // Cukup teruskan object data form bersih ke proxy lokal Nuxt
-    await this.datasource.register({
-      username: registerData.username,
-      email: registerData.email,
-      password: registerData.password
-    });
+  /**
+   * Register
+   */
+  async register(
+    request: RegisterRequest,
+  ): Promise<boolean> {
+
+    await this.datasource.register(request);
+
     return true;
-  } catch (error: any) {
-    // Menangkap pesan error asli jika email/username sudah terdaftar
-    const message = error.data?.statusMessage || 'Gagal melakukan registrasi.';
-    throw new Error(message);
+
   }
-}
+
+  /**
+   * Mapping OAuth Response
+   */
+  private mapTokens(
+    response: OAuthTokenResponse,
+  ): AuthTokens {
+
+    return {
+
+      accessToken:
+        response.access_token,
+
+      refreshToken:
+        response.refresh_token,
+
+      expiresIn:
+        response.expires_in,
+
+    };
+
+  }
+
 }

@@ -1,60 +1,73 @@
-// server/api/auth/token.post.ts
+// server/api/auth/refresh.post.ts
 
 import { FetchError } from 'ofetch';
-import type { LoginRequest } from '~/model/AuthModel';
+
+interface RefreshTokenRequest {
+  refreshToken: string;
+}
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<LoginRequest>(event);
+  const body = await readBody<RefreshTokenRequest>(event);
   const config = useRuntimeConfig();
 
-  if (!body.username || !body.password) {
+  if (!body.refreshToken) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Bad Request',
-      message: 'Username dan password wajib diisi.',
+      message: 'Refresh token is required.',
     });
   }
 
   const formData = new URLSearchParams();
 
-  formData.append('grant_type', 'password');
+  formData.append('grant_type', 'refresh_token');
   formData.append('client_id', config.public.oauthClientId);
   formData.append('client_secret', config.oauthClientSecret);
-
-  formData.append('username', body.username);
-  formData.append('password', body.password);
+  formData.append('refresh_token', body.refreshToken);
 
   try {
-    return await $fetch(
+    const response = await $fetch<{
+      access_token: string;
+      refresh_token: string;
+      expires_in: number;
+      token_type: string;
+    }>(
       `${config.public.drupalBaseUrl}/oauth/token`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type':
+            'application/x-www-form-urlencoded',
         },
         body: formData,
       },
     );
+
+    return {
+      accessToken: response.access_token,
+      refreshToken: response.refresh_token,
+      expiresIn: response.expires_in,
+    };
 
   } catch (error) {
 
     if (error instanceof FetchError) {
 
       const errorData =
-        error.response?._data ??
-        {};
+        error.response?._data ?? {};
 
       throw createError({
 
         statusCode:
           error.response?.status ?? 401,
 
-        statusMessage: 'Login Gagal',
+        statusMessage:
+          'Refresh Token Failed',
 
         message:
           errorData.message ??
           errorData.error_description ??
-          'Username atau password salah.',
+          'Refresh token tidak valid.',
 
       });
 

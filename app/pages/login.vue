@@ -23,7 +23,7 @@
       <!-- Alert Notification -->
       <UAlert
         v-if="errorMessage"
-        color="danger"
+        color="warning"
         variant="subtle"
         icon="i-lucide-alert-circle"
         title="Otentikasi Gagal"
@@ -57,11 +57,12 @@
           >
             <template #trailing>
               <UButton
+                type="button"
                 color="neutral"
                 variant="link"
                 :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                 class="p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                @click="showPassword = !showPassword"
+                @click="()=> {showPassword = !showPassword}"
               />
             </template>
           </UInput>
@@ -100,25 +101,38 @@
   </div>
 </template>
  
-<script setup>
+<script setup lang="ts">
 import { useAuth } from '~/composables/useAuth';
+
+definePageMeta({
+  layout: 'auth',
+});
 
 const username = ref('');
 const password = ref('');
 const showPassword = ref(false);
 
-const { executeLogin, loading, errorMessage } = useAuth();
-
-definePageMeta({
-  layout: 'auth'
-});
+const {
+  executeLogin,
+  loading,
+  errorMessage,
+} = useAuth();
 
 const handleFormLogin = async () => {
-  if (username.value && password.value) {
-    const success = await executeLogin(username.value, password.value);
-    if (success) {
-      navigateTo('/');
-    }
+
+  const user = await executeLogin({
+
+    username: username.value,
+
+    password: password.value,
+
+  });
+
+  if (user) {
+
+    await navigateTo('/');
+
   }
+
 };
 </script>

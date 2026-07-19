@@ -1,5 +1,5 @@
 // app/services/recipe.service.ts
-import { useRecipeApi } from '../implementation/RecipeApi';
+import { useRecipeApi } from '../infrastructure/drupal/RecipeApi';
 import type { IRecipe } from '../interface/IRecipe';
 import type { Recipe } from '../model/RecipeModel';
 

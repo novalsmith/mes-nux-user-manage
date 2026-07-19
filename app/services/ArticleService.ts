@@ -1,5 +1,5 @@
 // app/services/article.service.ts
-import { useArticleApi } from '../implementation/ArticleApi';
+import { useArticleApi } from '../infrastructure/drupal/ArticleApi';
 import type { IArticle } from '../interface/IArticle';
 import type { ArticleModel } from '../model/ArticleModel';
 

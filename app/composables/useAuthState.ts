@@ -1,31 +1,60 @@
-// composables/useAuthState.ts
-export const useAuthState = () => {
-  // State reaktif yang dibagikan secara global di seluruh aplikasi
-  const user = useState<any>('auth_user', () => {
-    // Ambil dari localStorage hanya di sisi client saat inisialisasi awal
-    if (import.meta.client) {
-      return JSON.parse(localStorage.getItem('user') || 'null');
-    }
-    return null;
-  });
+// app/composables/useAuthState.ts
 
-  const setUser = (userData: any) => {
+import type { User } from '~/model/AuthModel';
+
+export const useAuthState = () => {
+  /**
+   * Shared state authentication
+   */
+  const user = useState<User | null>(
+    'auth_user',
+    () => {
+      if (import.meta.client) {
+        const stored = localStorage.getItem('user');
+
+        return stored
+          ? JSON.parse(stored) as User
+          : null;
+      }
+
+      return null;
+    },
+  );
+
+  /**
+   * Simpan user
+   */
+  const setUser = (
+    userData: User,
+  ) => {
+
     user.value = userData;
+
     if (import.meta.client) {
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem(
+        'user',
+        JSON.stringify(userData),
+      );
     }
+
   };
 
+  /**
+   * Hapus session login
+   */
   const clearAuth = () => {
+
     user.value = null;
+
     if (import.meta.client) {
       localStorage.removeItem('user');
     }
+
   };
 
   return {
     user,
     setUser,
-    clearAuth
+    clearAuth,
   };
 };
